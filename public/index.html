@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 <script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
 <title>Aurora — a calm place for your mind</title>
 <meta name="description" content="Aurora is a free, non-judgmental mental health companion: talk it out, get recommendations that fit your mood, blow off steam, and connect with real therapists.">
@@ -16,37 +16,81 @@
 <header id="nav" class="nav"></header>
 
 <main>
-  <section class="container hero">
-    <div>
-      <p class="pill accent">Mental Health Assistant System</p>
-      <h1>A calm place for your mind — whenever you need it.</h1>
-      <p class="lead">Talk to Aurora without judgment, find movies, books and music that fit how you feel, let off steam in the stress zone, and reach a real therapist when you're ready.</p>
-      <div class="row">
-        <a class="btn" href="/signup.html">Get started — it's free</a>
-        <a class="btn ghost" href="/login.html">I have an account</a>
+  <section class="container">
+    <div class="night">
+      <div class="stars" id="stars" aria-hidden="true"><span class="shooting"></span></div>
+      <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+      <svg class="peaks" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="#132741" d="M0 300V170l90-60 70 40 110-110 90 80 60-30 120 120 90-70 100 60 120-130 110 100 80-40 160 120v150z"/>
+        <path fill="#0c1a2e" d="M0 300V230l120-50 90 40 130-90 110 90 80-30 140 70 120-80 130 70 110-40 170 90v80z"/>
+      </svg>
+      <div class="lake" aria-hidden="true"></div>
+
+      <div class="night-content">
+        <div>
+          <span class="kicker">Mental Health Assistant System</span>
+          <h1>A calm place for your mind — <em>whenever you need it.</em></h1>
+          <p class="lead">Talk to Aurora without judgment, find films, books and music that fit how you feel, let off steam in the stress zone, and reach a real therapist when you're ready.</p>
+          <div class="row">
+            <a class="btn light" href="/signup.html">Get started — it's free</a>
+            <a class="btn glass" href="/login.html">I have an account</a>
+          </div>
+          <p class="muted-link">Are you a therapist? <a href="/therapist/login.html">Sign in to the therapist portal →</a></p>
+        </div>
+
+        <div class="demo-chat" aria-label="Example conversation with Aurora">
+          <header>
+            <span class="brand-mark" aria-hidden="true" style="width:34px;height:34px"></span>
+            <div><strong>Aurora</strong><small>here for you, 24/7</small></div>
+          </header>
+          <div class="demo-log" id="demo-log" aria-hidden="true"></div>
+        </div>
       </div>
-      <p class="small muted" style="margin-top:16px">Are you a therapist? <a href="/therapist/login.html">Sign in to the therapist portal</a></p>
     </div>
-    <div class="hero-art" aria-hidden="true">
-      <div class="band b1"></div><div class="band b2"></div><div class="band b3"></div>
-      <div class="hills"></div>
-      <div class="hero-bubble">Hey, I'm Aurora 🌿 How are you feeling today?</div>
+  </section>
+
+  <div class="ribbon" aria-hidden="true">
+    <div class="ribbon-track" id="ribbon"></div>
+  </div>
+
+  <section class="container section" style="margin-top:24px">
+    <div class="eyebrow">What's inside</div>
+    <h2>Small things that make heavy days lighter</h2>
+    <div class="grid grid-4" style="margin-top:20px">
+      <div class="card feature"><div class="blob" style="--b:linear-gradient(135deg,#cde4f7,#d9d1f4)">💬</div><h3>Talk it out</h3><p class="muted">A chatbot that listens, notices how you feel, and suggests small things that help.</p></div>
+      <div class="card feature"><div class="blob" style="--b:linear-gradient(135deg,#fde7b5,#fbd3c4);animation-delay:-3s">✨</div><h3>Picks for you</h3><p class="muted">Tell us your favourite film, book and music — we'll suggest what to try next, tuned to your mood.</p></div>
+      <div class="card feature"><div class="blob" style="--b:linear-gradient(135deg,#d3ecd9,#c9e9ea);animation-delay:-5s">🥊</div><h3>Stress buster zone</h3><p class="muted">Punch a bag, breathe, meditate, pop bubble wrap, or write a worry and watch it float away.</p></div>
+      <div class="card feature"><div class="blob" style="--b:linear-gradient(135deg,#f8dfd6,#ece3f7);animation-delay:-7s">🤝</div><h3>Real therapists</h3><p class="muted">Book an in-person session. Only the therapist you book with can see what you choose to share.</p></div>
     </div>
   </section>
 
   <section class="container section">
-    <div class="grid grid-4">
-      <div class="card"><div class="card-icon">💬</div><h3>Talk it out</h3><p class="muted">A chatbot that listens, picks up on how you feel, and suggests small things that help.</p></div>
-      <div class="card"><div class="card-icon">✨</div><h3>Picks for you</h3><p class="muted">Tell us your favourite film, book and music — we'll suggest what to try next, tuned to your mood.</p></div>
-      <div class="card"><div class="card-icon">🥊</div><h3>Stress buster zone</h3><p class="muted">Punch a bag, breathe, meditate, pop bubble wrap, or write a worry and watch it float away.</p></div>
-      <div class="card"><div class="card-icon">🤝</div><h3>Real therapists</h3><p class="muted">Book an in-person session. Only the therapist you book with can see what you choose to share.</p></div>
+    <div class="card breath-card">
+      <div>
+        <div class="eyebrow">Try it right now</div>
+        <h2>Take one slow breath with us</h2>
+        <p class="muted" style="max-width:46ch">Follow the circle: breathe in as it grows, out as it shrinks. A longer out-breath tells your body it's safe. There's a whole set of these in the stress zone.</p>
+        <a class="btn secondary" href="/signup.html">Explore the stress zone →</a>
+      </div>
+      <div class="breath-orb" id="orb"><div class="halo"></div><div class="core"></div><span id="orb-text">Breathe in</span></div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="eyebrow">How it works</div>
+    <h2>Three steps, no pressure</h2>
+    <div class="steps" style="margin-top:20px">
+      <div class="card"><h3>Tell us a little about you</h3><p class="muted" style="margin:0">A film you watched lately, a book, the music you love, what your days look like.</p></div>
+      <div class="card"><h3>Check in with how you feel</h3><p class="muted" style="margin:0">One tap. Aurora's colours, suggestions and playlist gently adapt to your mood.</p></div>
+      <div class="card"><h3>Do one small thing</h3><p class="muted" style="margin:0">Chat, breathe, punch, journal — or book a session with a professional when you're ready.</p></div>
     </div>
   </section>
 
   <section class="container section">
     <div class="card soft">
-      <h2>The colours follow your mood</h2>
-      <p>When you check in, Aurora gently shifts its colours — warm and comforting when you're low, grounding greens when you're stressed, calm blues when you're frustrated. Try it:</p>
+      <div class="eyebrow">The colours follow your mood</div>
+      <h2>Pick a feeling — watch the sky change</h2>
+      <p>Warm and comforting when you're low, grounding greens when you're stressed, calm blues when you're frustrated. Try it:</p>
       <div id="mood-demo"></div>
     </div>
   </section>
@@ -65,13 +109,71 @@
   </div>
 </footer>
 
-<script src="/js/common.js"></script>
+<script src="js/common.js"></script>
 <script>
   boot().then(me => {
     if (me.user) location.href = me.user.role === 'therapist' ? '/therapist/dashboard.html' : '/home.html';
   });
   $('#helplines').innerHTML = helplinesHTML();
   moodPicker($('#mood-demo'), { selected: document.documentElement.dataset.mood, onPick: m => { document.documentElement.dataset.mood = m; } });
+
+  // stars
+  $('#stars').insertAdjacentHTML('beforeend', Array.from({ length: 90 }, () =>
+    `<b style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 100).toFixed(1)}%;--s:${(Math.random() * 1.8 + .8).toFixed(1)}px;--t:${(Math.random() * 4 + 2).toFixed(1)}s;--dl:-${(Math.random() * 5).toFixed(1)}s"></b>`).join(''));
+
+  // affirmations ribbon (duplicated so the loop is seamless)
+  const AFFIRMATIONS = ['You are doing better than you think', 'Rest is productive', 'Feelings are visitors — let them come and go',
+    'One small step still counts', 'It’s okay to ask for help', 'Breathe. You’ve got this moment', 'Progress, not perfection', 'Be gentle with yourself today'];
+  $('#ribbon').innerHTML = [...AFFIRMATIONS, ...AFFIRMATIONS].map(a => `<span>${a}</span>`).join('');
+
+  // breathing orb: 4s in, 2s hold, 5s out
+  (function breathe() {
+    const orb = $('#orb'), text = $('#orb-text');
+    const phases = [['Breathe in', 4000, true], ['Hold', 2000, true], ['Breathe out', 5000, false]];
+    let i = 0;
+    (function next() {
+      const [label, ms, big] = phases[i];
+      text.textContent = label;
+      orb.querySelector('.core').style.transitionDuration = `${ms / 1000}s`;
+      orb.classList.toggle('in', big);
+      i = (i + 1) % phases.length;
+      setTimeout(next, ms);
+    })();
+  })();
+
+  // self-playing chat demo
+  (function demo() {
+    const log = $('#demo-log');
+    const SCRIPT = [
+      ['me', 'I’ve been so stressed about exams 😣', 900],
+      ['bot', 'That sounds like a lot to carry. You don’t have to solve it all at once. Want to try a minute of box breathing with me?', 1800],
+      ['me', 'ok, yes', 1100],
+      ['bot', 'Breathe in… 2… 3… 4. Hold… and slowly out 🌬️', 1600],
+      ['bot', 'I also picked some calm lo-fi for you 🎧', 1200],
+      ['chips', ['🌬️ Breathe', '🥊 Punch it out', '✨ Picks for you'], 900],
+    ];
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    const add = html => { log.insertAdjacentHTML('beforeend', html); return log.lastElementChild; };
+    (async function play() {
+      for (;;) {
+        log.classList.remove('fade');
+        log.innerHTML = '';
+        for (const [who, text, pause] of SCRIPT) {
+          await wait(pause);
+          if (who === 'chips') { add(`<div class="chips">${text.map(c => `<span>${c}</span>`).join('')}</div>`); continue; }
+          if (who === 'bot') {
+            const t = add('<div class="b bot"><span class="typing"><i></i><i></i><i></i></span></div>');
+            await wait(900);
+            t.remove();
+          }
+          add(`<div class="b ${who}">${text}</div>`);
+        }
+        await wait(4500);
+        log.classList.add('fade');
+        await wait(700);
+      }
+    })();
+  })();
 </script>
 </body>
 </html>

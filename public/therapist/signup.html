@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="../css/style.css">
 <script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
 <title>Register as a therapist — Aurora</title>
 </head>
@@ -34,7 +34,7 @@
     <p class="role-switch">Already registered? <a href="/therapist/login.html">Sign in</a></p>
   </form>
 </main>
-<script src="/js/common.js"></script>
+<script src="../js/common.js"></script>
 <script>
   boot().then(me => { if (me.user) location.href = me.user.role === 'therapist' ? '/therapist/dashboard.html' : '/home.html'; });
   $('#signup').addEventListener('submit', async e => {

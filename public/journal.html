@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 <script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
 <title>Journal — Aurora</title>
 </head>
@@ -15,7 +15,7 @@
 <header id="nav" class="nav"></header>
 
 <main class="container">
-  <h1>Daily journal</h1>
+  <h1>Daily <span class="gradient-text">journal</span> <span class="float" aria-hidden="true">📓</span></h1>
   <p class="muted">Get it out of your head and onto the page. Entries are private unless you choose to share one with your therapist.</p>
 
   <div class="grid grid-2">
@@ -41,7 +41,7 @@
   </section>
 </main>
 
-<script src="/js/common.js"></script>
+<script src="js/common.js"></script>
 <script>
   const PROMPTS = [
     'What’s one thing that went okay today, however small?',

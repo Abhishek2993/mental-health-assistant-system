@@ -196,3 +196,51 @@ function audio() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
   return audioCtx;
 }
+
+// ---------- ambience: living background, scroll reveal, card spotlight ----------
+
+(() => {
+  const sky = document.createElement('div');
+  sky.className = 'sky';
+  sky.setAttribute('aria-hidden', 'true');
+  sky.innerHTML = '<span></span><span></span><span></span><span></span>';
+  document.body.prepend(sky);
+
+  const REVEAL = '.card, .tool-picker a, .helpline, .reveal';
+  const io = 'IntersectionObserver' in window && new IntersectionObserver(entries => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+      // drop the stagger delay once shown so hover effects respond instantly
+      setTimeout(() => e.target.style.setProperty('--d', '0ms'), 1200);
+    }
+  }, { rootMargin: '0px 0px -40px 0px' });
+
+  function reveal() {
+    if (!io) return;
+    for (const el of document.querySelectorAll(REVEAL)) {
+      if (el.dataset.rv || el.closest('dialog')) continue;
+      el.dataset.rv = '1';
+      el.classList.add('rv');
+      const index = el.parentElement ? [...el.parentElement.children].indexOf(el) : 0;
+      el.style.setProperty('--d', `${Math.min(index, 8) * 70}ms`);
+      io.observe(el);
+    }
+  }
+  reveal();
+  let queued = false;
+  new MutationObserver(() => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; reveal(); });
+  }).observe(document.body, { childList: true, subtree: true });
+
+  document.addEventListener('pointermove', e => {
+    const card = e.target.closest?.('.card');
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    card.style.setProperty('--my', `${e.clientY - r.top}px`);
+  }, { passive: true });
+})();
