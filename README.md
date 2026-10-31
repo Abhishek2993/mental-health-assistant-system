@@ -2,7 +2,7 @@
 
 A calm, mood-aware web app that gives people a non-judgmental place to talk, things to enjoy, ways to blow off steam, and a private path to a real therapist.
 
-Built on the SY-3 Group 2 *Mental Health Chatbot (Aurora)* project (MIT-ADT University, guided by Dr. Rajesh Prasad). It covers the original plan's chatbot with sentiment analysis, mood tracking, journal, meditation, tasks, emergency contacts and therapist connection, and adds:
+It includes a chatbot with sentiment analysis, mood tracking, a journal, meditation, emergency contacts and therapist connection, plus:
 
 - **Relatable sign-up** — a recent movie, a book, the music you listen to, what your day looks like, and how you feel right now.
 - **Recommendations** built from those answers, with a *try something new* section in every category.
