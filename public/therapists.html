@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fd1b9'/%3E%3Cstop offset='.5' stop-color='%237aa7e0'/%3E%3Cstop offset='1' stop-color='%23b39ddb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
+<title>Find a therapist — Aurora</title>
+</head>
+<body>
+<header id="nav" class="nav"></header>
+
+<main class="container">
+  <h1>Talk to a professional</h1>
+  <p class="muted" style="max-width:62ch">Book an in-person session with a registered therapist. When you book, <strong>only that therapist</strong> can see your sign-up answers, mood history and the journal entries you've chosen to share — and you can cancel at any time to remove their access.</p>
+
+  <section class="section" style="margin-top:28px">
+    <h2>Your sessions</h2>
+    <div class="stack" id="mine"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Therapists</h2>
+      <input type="search" id="city" placeholder="Filter by city, e.g. Pune" style="width:min(280px,100%)">
+    </div>
+    <div class="grid grid-2" id="list"></div>
+  </section>
+</main>
+
+<dialog id="book">
+  <form id="book-form" method="dialog">
+    <h2 style="margin-bottom:4px">Book a session</h2>
+    <p class="muted" id="book-who"></p>
+    <div class="field"><label for="when">Preferred date & time</label><input type="datetime-local" id="when" required></div>
+    <div class="field"><label for="reason">What would you like to talk about? <span class="muted">(optional)</span></label><textarea id="reason" rows="3" style="min-height:90px"></textarea></div>
+    <label class="check field"><input type="checkbox" id="consent" required> I agree to share my Aurora profile, mood history and shared journal entries with this therapist. I can cancel to withdraw this.</label>
+    <p class="error hidden" id="book-error" role="alert"></p>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn ghost" value="cancel" formnovalidate>Cancel</button>
+      <button class="btn" id="book-submit" value="ok">Request session</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="/js/common.js"></script>
+<script>
+  const STATUS = { requested: 'warn', confirmed: 'ok', completed: '', declined: 'bad', cancelled: 'bad' };
+
+  (async () => {
+    await boot('user');
+    let therapists = [];
+    let chosen = null;
+
+    async function loadMine() {
+      const mine = await api('/appointments');
+      $('#mine').innerHTML = mine.length ? mine.map(a => `
+        <div class="card plain spread">
+          <div><strong>${esc(a.therapist)}</strong> · ${fmtDateTime(a.scheduled_at)}
+            <div class="small muted">${esc(a.clinic_address)}</div></div>
+          <div class="row"><span class="pill ${STATUS[a.status]}">${a.status}</span>
+            ${['requested', 'confirmed'].includes(a.status) ? `<button class="btn ghost small" data-cancel="${a.id}">Cancel</button>` : ''}</div>
+        </div>`).join('') : '<div class="card plain empty">No sessions yet. Choose a therapist below whenever you feel ready.</div>';
+    }
+
+    async function loadList() {
+      therapists = await api(`/therapists?city=${encodeURIComponent($('#city').value)}`);
+      $('#list').innerHTML = therapists.length ? therapists.map(t => `
+        <div class="card">
+          <div class="row" style="align-items:flex-start;flex-wrap:nowrap">
+            <span class="avatar" style="width:52px;height:52px;font-size:1.3rem;flex:none">${esc(t.name.replace('Dr. ', '')[0])}</span>
+            <div>
+              <h3 style="margin:0">${esc(t.name)}</h3>
+              <div class="small muted">${esc(t.specialization)} · ${t.years_experience} yrs experience</div>
+            </div>
+          </div>
+          ${t.bio ? `<p class="small" style="margin:12px 0 8px">${esc(t.bio)}</p>` : ''}
+          <p class="small muted" style="margin:0 0 14px">📍 ${esc(t.clinic_address)}</p>
+          <button class="btn small" data-book="${t.id}">Book in-person session</button>
+        </div>`).join('') : '<div class="empty">No therapists found for that city yet.</div>';
+    }
+
+    $('#list').addEventListener('click', e => {
+      const id = Number(e.target.dataset.book);
+      if (!id) return;
+      chosen = therapists.find(t => t.id === id);
+      $('#book-who').textContent = `${chosen.name} · ${chosen.clinic_address}`;
+      const d = new Date(Date.now() + 2 * 864e5);
+      d.setHours(11, 0, 0, 0);
+      $('#when').value = new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 16);
+      $('#when').min = new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 16);
+      $('#book-error').classList.add('hidden');
+      $('#book').showModal();
+    });
+
+    $('#book-form').addEventListener('submit', async e => {
+      if (e.submitter?.value === 'cancel') return; // let the dialog close
+      e.preventDefault();
+      try {
+        await api('/appointments', {
+          method: 'POST',
+          body: {
+            therapist_id: chosen.id,
+            scheduled_at: new Date($('#when').value).toISOString(),
+            reason: $('#reason').value,
+            consent: $('#consent').checked,
+          },
+        });
+        $('#book').close();
+        $('#reason').value = '';
+        $('#consent').checked = false;
+        toast(`Request sent to ${chosen.name}. They'll confirm soon.`);
+        loadMine();
+      } catch (err) {
+        $('#book-error').textContent = err.message;
+        $('#book-error').classList.remove('hidden');
+      }
+    });
+
+    $('#mine').addEventListener('click', async e => {
+      const id = e.target.dataset.cancel;
+      if (!id || !confirm('Cancel this session? The therapist will no longer be able to see your data.')) return;
+      await api(`/appointments/${id}/cancel`, { method: 'POST' });
+      toast('Session cancelled');
+      loadMine();
+    });
+
+    let t;
+    $('#city').addEventListener('input', () => { clearTimeout(t); t = setTimeout(loadList, 250); });
+    loadMine();
+    loadList();
+  })();
+</script>
+</body>
+</html>

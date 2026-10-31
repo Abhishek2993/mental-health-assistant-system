@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fd1b9'/%3E%3Cstop offset='.5' stop-color='%237aa7e0'/%3E%3Cstop offset='1' stop-color='%23b39ddb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
+<title>Create your space — Aurora</title>
+</head>
+<body>
+<header id="nav" class="nav"></header>
+
+<main class="auth-wrap">
+  <form class="card auth-card" id="wizard" novalidate>
+    <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+
+    <!-- 1 -->
+    <section class="step" data-step="1">
+      <div class="step-kicker">Step 1 of 6 · About you</div>
+      <h2>Let's create your space</h2>
+      <p class="muted">Everything you share stays private unless you choose to book a therapist.</p>
+      <div class="field"><label for="name">What should we call you?</label><input id="name" type="text" autocomplete="given-name" required></div>
+      <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="new-password" minlength="8" required><div class="hint">At least 8 characters.</div></div>
+      <div class="field"><label>Age group</label><div id="age"></div></div>
+      <div class="field"><label>What do you do?</label><div id="occupation"></div></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="step" data-step="2" hidden>
+      <div class="step-kicker">Step 2 of 6 · Movies & shows</div>
+      <h2>What's something you watched recently?</h2>
+      <p class="muted">A movie you enjoyed lately — even a comfort re-watch counts.</p>
+      <div class="field autocomplete">
+        <label for="movie">Recently watched</label>
+        <input id="movie" type="search" placeholder="Start typing, e.g. Inception, Toy Story…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="movie-list">
+        <ul class="suggestions hidden" id="movie-list" role="listbox"></ul>
+        <div class="picked small muted" id="movie-picked"></div>
+      </div>
+      <div class="field"><label>Genres you usually enjoy</label><div id="movie-genres"></div></div>
+    </section>
+
+    <!-- 3 -->
+    <section class="step" data-step="3" hidden>
+      <div class="step-kicker">Step 3 of 6 · Books</div>
+      <h2>Any book you've read (or loved)?</h2>
+      <p class="muted">Not much of a reader? Totally fine — skip ahead.</p>
+      <div class="field autocomplete">
+        <label for="book">A book you read recently</label>
+        <input id="book" type="search" placeholder="e.g. The Alchemist, Atomic Habits…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="book-list">
+        <ul class="suggestions hidden" id="book-list" role="listbox"></ul>
+        <div class="picked small muted" id="book-picked"></div>
+      </div>
+      <div class="field"><label>Kinds of books you like</label><div id="book-genres"></div></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="step" data-step="4" hidden>
+      <div class="step-kicker">Step 4 of 6 · Music</div>
+      <h2>What's playing in your headphones?</h2>
+      <div class="field"><label>Music you listen to</label><div id="music"></div></div>
+      <div class="field"><label for="artist">A favourite artist <span class="muted">(optional)</span></label><input id="artist" type="text" placeholder="e.g. Arijit Singh, Taylor Swift, Coldplay"></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="step" data-step="5" hidden>
+      <div class="step-kicker">Step 5 of 6 · Your day</div>
+      <h2>What does a normal day look like?</h2>
+      <div class="field"><label>On most days I…</label><div id="daily"></div></div>
+      <div class="field"><label>To unwind, I usually…</label><div id="unwind"></div></div>
+      <div class="field"><label>Sleep on a typical night</label><div id="sleep"></div></div>
+      <div class="field"><label>Screen time outside work/study</label><div id="screen"></div></div>
+    </section>
+
+    <!-- 6 -->
+    <section class="step" data-step="6" hidden>
+      <div class="step-kicker">Step 6 of 6 · Right now</div>
+      <h2>How are you feeling today?</h2>
+      <p class="muted">Watch the colours — Aurora adapts to you.</p>
+      <div class="field"><div id="mood"></div></div>
+      <div class="field"><label>What would you like help with most?</label><div id="hoping"></div></div>
+    </section>
+
+    <p class="error hidden" id="error" role="alert"></p>
+
+    <div class="wizard-nav">
+      <button type="button" class="btn ghost" id="back">Back</button>
+      <button type="submit" class="btn" id="next">Continue</button>
+    </div>
+    <p class="role-switch">Already have an account? <a href="/login.html">Sign in</a> · Therapist? <a href="/therapist/signup.html">Join as a therapist</a></p>
+  </form>
+</main>
+
+<script src="/js/common.js"></script>
+<script src="/js/signup.js"></script>
+</body>
+</html>

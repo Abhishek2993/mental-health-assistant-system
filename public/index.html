@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fd1b9'/%3E%3Cstop offset='.5' stop-color='%237aa7e0'/%3E%3Cstop offset='1' stop-color='%23b39ddb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
+<title>Aurora — a calm place for your mind</title>
+<meta name="description" content="Aurora is a free, non-judgmental mental health companion: talk it out, get recommendations that fit your mood, blow off steam, and connect with real therapists.">
+</head>
+<body>
+<header id="nav" class="nav"></header>
+
+<main>
+  <section class="container hero">
+    <div>
+      <p class="pill accent">Mental Health Assistant System</p>
+      <h1>A calm place for your mind — whenever you need it.</h1>
+      <p class="lead">Talk to Aurora without judgment, find movies, books and music that fit how you feel, let off steam in the stress zone, and reach a real therapist when you're ready.</p>
+      <div class="row">
+        <a class="btn" href="/signup.html">Get started — it's free</a>
+        <a class="btn ghost" href="/login.html">I have an account</a>
+      </div>
+      <p class="small muted" style="margin-top:16px">Are you a therapist? <a href="/therapist/login.html">Sign in to the therapist portal</a></p>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="band b1"></div><div class="band b2"></div><div class="band b3"></div>
+      <div class="hills"></div>
+      <div class="hero-bubble">Hey, I'm Aurora 🌿 How are you feeling today?</div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="grid grid-4">
+      <div class="card"><div class="card-icon">💬</div><h3>Talk it out</h3><p class="muted">A chatbot that listens, picks up on how you feel, and suggests small things that help.</p></div>
+      <div class="card"><div class="card-icon">✨</div><h3>Picks for you</h3><p class="muted">Tell us your favourite film, book and music — we'll suggest what to try next, tuned to your mood.</p></div>
+      <div class="card"><div class="card-icon">🥊</div><h3>Stress buster zone</h3><p class="muted">Punch a bag, breathe, meditate, pop bubble wrap, or write a worry and watch it float away.</p></div>
+      <div class="card"><div class="card-icon">🤝</div><h3>Real therapists</h3><p class="muted">Book an in-person session. Only the therapist you book with can see what you choose to share.</p></div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="card soft">
+      <h2>The colours follow your mood</h2>
+      <p>When you check in, Aurora gently shifts its colours — warm and comforting when you're low, grounding greens when you're stressed, calm blues when you're frustrated. Try it:</p>
+      <div id="mood-demo"></div>
+    </div>
+  </section>
+
+  <section class="container section" id="help">
+    <div class="section-head"><h2>Need to talk to someone right now?</h2></div>
+    <p class="muted">Aurora isn't an emergency service. If you're in crisis or thinking about hurting yourself, please reach out — these lines are free and confidential.</p>
+    <div class="helplines" id="helplines"></div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="container spread">
+    <span>Aurora · Mental Health Assistant System · MIT-ADT University, SY-3 Group 2</span>
+    <span>Not a substitute for professional diagnosis or treatment.</span>
+  </div>
+</footer>
+
+<script src="/js/common.js"></script>
+<script>
+  boot().then(me => {
+    if (me.user) location.href = me.user.role === 'therapist' ? '/therapist/dashboard.html' : '/home.html';
+  });
+  $('#helplines').innerHTML = helplinesHTML();
+  moodPicker($('#mood-demo'), { selected: document.documentElement.dataset.mood, onPick: m => { document.documentElement.dataset.mood = m; } });
+</script>
+</body>
+</html>

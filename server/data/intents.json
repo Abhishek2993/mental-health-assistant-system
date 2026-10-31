@@ -1,0 +1,836 @@
+{
+  "actions": {
+    "breathe": {
+      "label": "Try a breathing exercise",
+      "href": "/stress.html#breathe"
+    },
+    "punch": {
+      "label": "Punch it out",
+      "href": "/stress.html#punch"
+    },
+    "meditate": {
+      "label": "Start a short meditation",
+      "href": "/stress.html#meditate"
+    },
+    "ground": {
+      "label": "5-4-3-2-1 grounding",
+      "href": "/stress.html#ground"
+    },
+    "letgo": {
+      "label": "Write it & let it go",
+      "href": "/stress.html#letgo"
+    },
+    "bubbles": {
+      "label": "Pop some bubbles",
+      "href": "/stress.html#bubbles"
+    },
+    "doodle": {
+      "label": "Open the doodle pad",
+      "href": "/stress.html#doodle"
+    },
+    "journal": {
+      "label": "Write in your journal",
+      "href": "/journal.html"
+    },
+    "recs": {
+      "label": "See things picked for you",
+      "href": "/recommendations.html"
+    },
+    "music": {
+      "label": "Songs for this mood",
+      "href": "/recommendations.html#music"
+    },
+    "therapists": {
+      "label": "Find a therapist near you",
+      "href": "/therapists.html"
+    },
+    "helplines": {
+      "label": "Helplines",
+      "href": "/index.html#help"
+    }
+  },
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "hi",
+        "hello",
+        "hey",
+        "hey aurora",
+        "hi aurora",
+        "good morning",
+        "good evening",
+        "good afternoon",
+        "hello there",
+        "yo",
+        "hii",
+        "heyy",
+        "namaste"
+      ],
+      "responses": [
+        "Hi {name} 🌿 I'm glad you're here. How are you feeling right now?",
+        "Hey {name}! This is a safe space — you can say anything. What's on your mind today?",
+        "Hello {name}. Take a breath, settle in. How's your day been so far?"
+      ]
+    },
+    {
+      "tag": "how_are_you",
+      "patterns": [
+        "how are you",
+        "how are you doing",
+        "how is it going",
+        "what's up",
+        "how have you been",
+        "how are you aurora"
+      ],
+      "responses": [
+        "I'm here and fully listening — thanks for asking, {name}. More importantly, how are *you* doing?",
+        "I'm doing well, and I'd love to hear about you. What's been happening lately?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "bye",
+        "goodbye",
+        "see you",
+        "see you later",
+        "talk later",
+        "gotta go",
+        "good night",
+        "i am leaving",
+        "catch you later"
+      ],
+      "responses": [
+        "Take care of yourself, {name}. I'm here whenever you want to talk again 💛",
+        "Bye for now! Be gentle with yourself today.",
+        "Good talking with you. Remember: small steps still count. See you soon."
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "thanks",
+        "thank you",
+        "thank you so much",
+        "that helps",
+        "that helped",
+        "you are helpful",
+        "you are so helpful",
+        "i appreciate it",
+        "thanks aurora",
+        "that was nice"
+      ],
+      "responses": [
+        "My pleasure, {name} — I'm here to help, 24/7.",
+        "I'm really glad that helped. You did the hard part by reaching out.",
+        "Anytime. Is there anything else on your mind?"
+      ]
+    },
+    {
+      "tag": "about_bot",
+      "patterns": [
+        "who are you",
+        "what are you",
+        "what is your name",
+        "what can you do",
+        "are you a bot",
+        "are you human",
+        "are you real",
+        "how can you help me",
+        "what is aurora"
+      ],
+      "responses": [
+        "I'm Aurora, a non-judgmental companion for your mental wellbeing. I can listen, suggest coping techniques, recommend things you might enjoy, and help you find a therapist. I'm not a doctor though — for a diagnosis or emergency, please reach a professional."
+      ],
+      "actions": [
+        "recs",
+        "therapists"
+      ]
+    },
+    {
+      "tag": "vent",
+      "patterns": [
+        "i just want to vent",
+        "can i vent",
+        "i need to talk",
+        "i need someone to talk to",
+        "can you listen",
+        "just listen",
+        "i want to rant",
+        "let me rant",
+        "i have something to say",
+        "can you help me",
+        "i need help",
+        "help me please",
+        "please help me"
+      ],
+      "responses": [
+        "Of course. I'm all ears — no judgment, no rush. Let it out.",
+        "Go ahead, {name}. Say it however it comes out; I'm listening."
+      ]
+    },
+    {
+      "tag": "stressed",
+      "patterns": [
+        "i am stressed",
+        "i feel stressed",
+        "so much stress",
+        "stressed out",
+        "too much pressure",
+        "i am under pressure",
+        "i am overwhelmed",
+        "everything is too much",
+        "i can't handle this",
+        "feeling stressed today",
+        "i'm so stressed"
+      ],
+      "responses": [
+        "I'm sorry you're feeling stressed, {name}. Stress is something many of us carry. What's been causing it — is there one thing in particular weighing on you?",
+        "That sounds like a lot to hold at once. Let's slow down for a second: what's the biggest thing on your plate right now?",
+        "Feeling overwhelmed is your mind's way of saying the load is heavy. You don't have to solve it all at once. What's one piece we could look at together?"
+      ],
+      "actions": [
+        "breathe",
+        "punch"
+      ],
+      "offer": {
+        "text": "Let's do 1 minute of box breathing together: in for 4, hold for 4, out for 4, hold for 4. I'll guide you on the breathing page.",
+        "action": "breathe"
+      },
+      "mood": "stressed"
+    },
+    {
+      "tag": "anxious",
+      "patterns": [
+        "i feel anxious",
+        "i have anxiety",
+        "i am nervous",
+        "i am worried",
+        "i keep worrying",
+        "i feel uneasy",
+        "my heart is racing",
+        "i feel scared",
+        "i am afraid",
+        "anxiety is bad today",
+        "i am so nervous about tomorrow"
+      ],
+      "responses": [
+        "Anxiety can feel really physical — tight chest, racing thoughts. You're safe right now. Would you like to try a quick grounding exercise with me?",
+        "That worried feeling is exhausting. Let's name it: what is your mind telling you might happen?",
+        "I hear you, {name}. Anxiety often talks in 'what ifs'. What's the 'what if' that's loudest right now?"
+      ],
+      "actions": [
+        "ground",
+        "breathe"
+      ],
+      "offer": {
+        "text": "Great. Try this: name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell and 1 you can taste. The grounding page walks you through it.",
+        "action": "ground"
+      },
+      "mood": "anxious"
+    },
+    {
+      "tag": "panic",
+      "patterns": [
+        "i am having a panic attack",
+        "panic attack",
+        "i can't breathe",
+        "i am panicking",
+        "i feel like i'm dying",
+        "i can't calm down"
+      ],
+      "responses": [
+        "You're going to be okay — panic peaks and then passes, usually within minutes. Breathe with me: in through your nose for 4… hold for 4… out slowly for 6. Again. Feel your feet on the floor."
+      ],
+      "actions": [
+        "breathe",
+        "ground"
+      ],
+      "mood": "anxious"
+    },
+    {
+      "tag": "sad",
+      "patterns": [
+        "i am sad",
+        "i feel sad",
+        "i feel low",
+        "i feel down",
+        "i am unhappy",
+        "i feel like crying",
+        "i cried today",
+        "i am upset",
+        "feeling blue",
+        "today was a bad day",
+        "i had a bad day",
+        "i'm not okay",
+        "not feeling good",
+        "i am not happy",
+        "not happy",
+        "i am not feeling well",
+        "not great",
+        "i'm not good"
+      ],
+      "responses": [
+        "I'm really sorry you're feeling this way, {name}. It's okay to not be okay. Do you want to tell me what happened?",
+        "That sounds heavy. Sadness deserves space, not judgment. What's been going on?",
+        "Thank you for telling me. Sometimes just putting it into words helps a little. What do you think brought this on?"
+      ],
+      "actions": [
+        "journal",
+        "music"
+      ],
+      "offer": {
+        "text": "I've picked some gentle, gradually uplifting songs from the genres you like — they're waiting on your recommendations page.",
+        "action": "music"
+      },
+      "mood": "low"
+    },
+    {
+      "tag": "depressed",
+      "patterns": [
+        "i feel empty",
+        "i feel hopeless",
+        "nothing matters",
+        "i feel numb",
+        "i am depressed",
+        "i think i have depression",
+        "i don't enjoy anything anymore",
+        "what is the point",
+        "i feel worthless",
+        "i hate my life"
+      ],
+      "responses": [
+        "I'm really glad you told me, {name}. Feeling empty or hopeless is painful, and you don't have to carry it alone. Has it been like this for a while?",
+        "That sounds incredibly hard. When things feel pointless, even small things are hard to start. Talking to a professional can genuinely help — would you be open to that?"
+      ],
+      "actions": [
+        "therapists",
+        "journal"
+      ],
+      "offer": {
+        "text": "You can find a therapist near you and book an in-person session. It's a brave step and you deserve that support.",
+        "action": "therapists"
+      },
+      "mood": "low"
+    },
+    {
+      "tag": "lonely",
+      "patterns": [
+        "i feel lonely",
+        "i am lonely",
+        "i am alone",
+        "i have no friends",
+        "nobody understands me",
+        "no one cares about me",
+        "i feel isolated",
+        "i have no one to talk to",
+        "i feel left out"
+      ],
+      "responses": [
+        "Loneliness hurts, {name}, and it's more common than people admit. I'm here with you right now. When did you last feel connected to someone?",
+        "I'm sorry you're feeling alone. You reached out here, which takes courage. Is there someone — even someone you haven't spoken to in a while — you could send a quick message to today?"
+      ],
+      "actions": [
+        "recs"
+      ],
+      "mood": "low"
+    },
+    {
+      "tag": "angry",
+      "patterns": [
+        "i am angry",
+        "i am so mad",
+        "i am furious",
+        "i am frustrated",
+        "i am irritated",
+        "everything annoys me",
+        "i want to punch something",
+        "i am pissed off",
+        "i hate everyone",
+        "i'm so annoyed"
+      ],
+      "responses": [
+        "Anger is a valid feeling — it usually means something matters to you. Want to let some of it out safely first? The punching bag in the stress zone is waiting 🥊",
+        "That frustration sounds intense. What happened? Sometimes it helps to say it exactly as it is."
+      ],
+      "actions": [
+        "punch",
+        "letgo"
+      ],
+      "offer": {
+        "text": "Head to the punching bag and give it everything. Then we can talk it through when you're ready.",
+        "action": "punch"
+      },
+      "mood": "angry"
+    },
+    {
+      "tag": "exam_stress",
+      "patterns": [
+        "i have exams",
+        "exam stress",
+        "i am scared of exams",
+        "i will fail",
+        "i failed my exam",
+        "too much studying",
+        "i can't study",
+        "my marks are bad",
+        "results are coming",
+        "assignment deadline",
+        "college is stressful",
+        "academic pressure"
+      ],
+      "responses": [
+        "Exams can make everything feel like it's riding on one moment — but you are more than a grade, {name}. What subject or deadline is worrying you most?",
+        "Academic pressure is real. Try breaking it down: what's the very next small task? Just that one. Pomodoro (25 min focus, 5 min break) can make it feel lighter.",
+        "Feeling scared of failing usually means you care. Let's make a tiny plan: which topic, how long, and what's your reward after?"
+      ],
+      "actions": [
+        "breathe",
+        "music"
+      ],
+      "mood": "stressed"
+    },
+    {
+      "tag": "work_stress",
+      "patterns": [
+        "work is stressful",
+        "my job is stressing me",
+        "my boss",
+        "too much work",
+        "deadlines at work",
+        "i hate my job",
+        "burnout",
+        "i am burnt out",
+        "office stress",
+        "workload is too much"
+      ],
+      "responses": [
+        "Work stress can follow you home. What part of work is draining you most right now — the workload, people, or something else?",
+        "Burnout is a sign you've been running on empty for too long. What's one boundary you could set this week, even a small one?"
+      ],
+      "actions": [
+        "meditate",
+        "punch"
+      ],
+      "mood": "stressed"
+    },
+    {
+      "tag": "overthinking",
+      "patterns": [
+        "i overthink",
+        "i am overthinking",
+        "i can't stop thinking",
+        "my mind won't stop",
+        "racing thoughts",
+        "thoughts keep looping",
+        "i keep replaying things"
+      ],
+      "responses": [
+        "Overthinking is like a browser with 40 tabs open. Try writing every thought down — once it's on paper, your brain can stop holding it. Want to try 'write it and let it go'?",
+        "When thoughts loop, ask: 'Is this a problem I can solve right now?' If yes, pick one step. If no, it might be worry — and worry can be set down for now."
+      ],
+      "actions": [
+        "letgo",
+        "journal"
+      ],
+      "offer": {
+        "text": "Write the thought down on the 'let it go' page and watch it drift away. It sounds simple, but it helps.",
+        "action": "letgo"
+      },
+      "mood": "anxious"
+    },
+    {
+      "tag": "sleep",
+      "patterns": [
+        "i can't sleep",
+        "i have insomnia",
+        "i am not sleeping well",
+        "i wake up at night",
+        "sleep problems",
+        "i sleep too much",
+        "i stayed up all night",
+        "my sleep is bad"
+      ],
+      "responses": [
+        "Sleep troubles make everything harder. A few things that help: no screens 30 minutes before bed, a cool dark room, and the same wake-up time every day. Want a calming meditation to wind down?",
+        "Lying awake is frustrating. If you can't sleep after 20 minutes, get up and do something quiet in dim light, then try again. A body scan meditation can help too."
+      ],
+      "actions": [
+        "meditate"
+      ],
+      "offer": {
+        "text": "Try the 'sleep' preset on the meditation page — soft rain sounds and a slow breathing guide.",
+        "action": "meditate"
+      },
+      "mood": "tired"
+    },
+    {
+      "tag": "tired",
+      "patterns": [
+        "i am tired",
+        "i feel exhausted",
+        "i have no energy",
+        "i am drained",
+        "i feel lazy",
+        "i am so tired of everything",
+        "i feel sluggish"
+      ],
+      "responses": [
+        "Being drained is your body asking for care. Have you had water, food and some daylight today? Sometimes the basics make a surprising difference.",
+        "It's okay to rest, {name}. Rest isn't laziness — it's maintenance. What would feel restful right now?"
+      ],
+      "actions": [
+        "meditate",
+        "music"
+      ],
+      "mood": "tired"
+    },
+    {
+      "tag": "breakup",
+      "patterns": [
+        "my girlfriend left me",
+        "my boyfriend left me",
+        "we broke up",
+        "breakup",
+        "i got dumped",
+        "heartbroken",
+        "my relationship ended",
+        "i miss my ex",
+        "my partner cheated"
+      ],
+      "responses": [
+        "I'm so sorry, {name}. Heartbreak is real pain — your brain literally processes it like physical hurt. Be extra gentle with yourself right now. How are you holding up?",
+        "Endings hurt even when they're for the best. It's okay to grieve what you had and what you hoped for. Do you want to talk about it?"
+      ],
+      "actions": [
+        "journal",
+        "music"
+      ],
+      "mood": "low"
+    },
+    {
+      "tag": "family",
+      "patterns": [
+        "problems at home",
+        "my parents don't understand me",
+        "fight with my parents",
+        "family problems",
+        "my family is toxic",
+        "my parents are strict",
+        "parents pressure me",
+        "my parents fight"
+      ],
+      "responses": [
+        "Family stuff can be the hardest because you can't just walk away from it. What's been happening at home?",
+        "It sounds like you're not feeling understood at home. That's really tough. What would you want them to understand about you?"
+      ],
+      "actions": [
+        "journal",
+        "therapists"
+      ],
+      "mood": "stressed"
+    },
+    {
+      "tag": "friends",
+      "patterns": [
+        "fight with my friend",
+        "my friends ignore me",
+        "my best friend is mad at me",
+        "friends left me",
+        "friendship problems",
+        "i feel betrayed by my friend"
+      ],
+      "responses": [
+        "Friend conflicts can sting a lot. What happened between you two?",
+        "Feeling ignored by friends hurts. Sometimes people are caught up in their own stuff — but your feelings are still valid. Have you been able to tell them how you feel?"
+      ],
+      "mood": "low"
+    },
+    {
+      "tag": "bullying",
+      "patterns": [
+        "i am being bullied",
+        "people bully me",
+        "they make fun of me",
+        "i get teased",
+        "cyberbullying",
+        "people are mean to me",
+        "they laugh at me"
+      ],
+      "responses": [
+        "I'm really sorry that's happening. Bullying is never your fault, {name}. Is there an adult or someone you trust — a teacher, parent or counsellor — you could tell?",
+        "No one deserves to be treated like that. You don't have to handle it alone. Would it help to talk about what's been happening?"
+      ],
+      "actions": [
+        "therapists"
+      ],
+      "mood": "low"
+    },
+    {
+      "tag": "self_esteem",
+      "patterns": [
+        "i am not good enough",
+        "i hate myself",
+        "i am ugly",
+        "i am a failure",
+        "everyone is better than me",
+        "i have no confidence",
+        "i am useless",
+        "i compare myself to others"
+      ],
+      "responses": [
+        "That inner critic can be so loud. Would you talk to a friend the way it talks to you? Try this: name one thing you did this week — however small — that you're quietly proud of.",
+        "Comparison steals joy, especially on social media where everyone posts their highlight reel. You're seeing their best moments against your behind-the-scenes. What's something you like about yourself?"
+      ],
+      "actions": [
+        "journal"
+      ],
+      "mood": "low"
+    },
+    {
+      "tag": "motivation",
+      "patterns": [
+        "i have no motivation",
+        "i can't focus",
+        "i am procrastinating",
+        "i keep procrastinating",
+        "i don't feel like doing anything",
+        "help me focus",
+        "motivate me",
+        "i am unproductive"
+      ],
+      "responses": [
+        "Motivation usually shows up *after* you start, not before. Try the 2-minute rule: do just 2 minutes of the task. Often that's enough to keep going.",
+        "Low motivation is often tiredness or overwhelm in disguise. What's the smallest possible version of the thing you're avoiding?"
+      ],
+      "actions": [
+        "music",
+        "meditate"
+      ]
+    },
+    {
+      "tag": "happy",
+      "patterns": [
+        "i am happy",
+        "i feel good",
+        "i feel great",
+        "today was a good day",
+        "i am excited",
+        "i feel amazing",
+        "i am doing well",
+        "i'm fine",
+        "i passed my exam",
+        "good news",
+        "i love my job",
+        "everything is great",
+        "life is good",
+        "things are going well",
+        "i had fun today",
+        "i am proud of myself"
+      ],
+      "responses": [
+        "That's wonderful to hear, {name}! 🌞 What made today good? Savouring good moments actually helps them stick.",
+        "Love that! Want to jot this down in your journal? Future-you on a tough day will appreciate the reminder.",
+        "Yay! Celebrate it — even small wins deserve it. What's the highlight?"
+      ],
+      "actions": [
+        "journal",
+        "recs"
+      ],
+      "mood": "happy"
+    },
+    {
+      "tag": "bored",
+      "patterns": [
+        "i am bored",
+        "nothing to do",
+        "so bored",
+        "suggest something to do",
+        "what should i do",
+        "i need something to do"
+      ],
+      "responses": [
+        "Boredom can be an invitation to try something new! I've put together movies, books, music and activities based on what you told me when you signed up.",
+        "How about something different today? Check your recommendations page — there's a 'try something new' section just for this."
+      ],
+      "actions": [
+        "recs",
+        "doodle"
+      ],
+      "mood": "okay"
+    },
+    {
+      "tag": "grief",
+      "patterns": [
+        "someone died",
+        "i lost someone",
+        "my grandfather died",
+        "my grandmother died",
+        "my pet died",
+        "i miss someone who passed away",
+        "grief",
+        "my friend passed away",
+        "death in the family",
+        "my dog died",
+        "my cat died",
+        "passed away",
+        "he died",
+        "she died",
+        "i miss him so much",
+        "i miss her so much",
+        "funeral"
+      ],
+      "responses": [
+        "I'm so sorry for your loss, {name}. Grief doesn't follow a schedule, and there's no right way to feel. Would you like to tell me about them?",
+        "Losing someone you love is one of the hardest things. Be patient with yourself. What do you miss most about them?"
+      ],
+      "actions": [
+        "journal",
+        "therapists"
+      ],
+      "mood": "low"
+    },
+    {
+      "tag": "need_therapist",
+      "patterns": [
+        "i need a therapist",
+        "i want to talk to a professional",
+        "find a counsellor",
+        "i need professional help",
+        "book a therapist",
+        "can i see a doctor",
+        "i want therapy",
+        "where can i get help"
+      ],
+      "responses": [
+        "That's a strong, healthy step, {name}. You can browse therapists, see where they practise, and request an in-person session. Once you book, they'll be able to see the wellbeing info you choose to share."
+      ],
+      "actions": [
+        "therapists"
+      ]
+    },
+    {
+      "tag": "breathing",
+      "patterns": [
+        "breathing exercise",
+        "help me breathe",
+        "how to calm down",
+        "calm me down",
+        "i need to relax",
+        "relaxation technique",
+        "help me relax"
+      ],
+      "responses": [
+        "Let's breathe together. Box breathing: in for 4, hold 4, out 4, hold 4. Repeat four times. Or try 4-7-8 for sleep. The breathing page has a visual guide."
+      ],
+      "actions": [
+        "breathe",
+        "meditate"
+      ]
+    },
+    {
+      "tag": "meditation",
+      "patterns": [
+        "meditation",
+        "i want to meditate",
+        "how to meditate",
+        "guided meditation",
+        "mindfulness",
+        "teach me mindfulness"
+      ],
+      "responses": [
+        "Meditation is just practising coming back — to the breath, to now. Start with 3 minutes: sit comfortably, breathe naturally, and each time your mind wanders, gently return. That *is* the practice."
+      ],
+      "actions": [
+        "meditate"
+      ]
+    },
+    {
+      "tag": "recommend",
+      "patterns": [
+        "recommend a movie",
+        "suggest a book",
+        "recommend music",
+        "what should i watch",
+        "what should i read",
+        "what should i listen to",
+        "song suggestions",
+        "movie suggestions",
+        "recommend something"
+      ],
+      "responses": [
+        "Based on what you've told me, I've put together movies, books, songs and activities just for you — including a few things outside your usual comfort zone."
+      ],
+      "actions": [
+        "recs",
+        "music"
+      ]
+    },
+    {
+      "tag": "joke",
+      "patterns": [
+        "tell me a joke",
+        "make me laugh",
+        "say something funny",
+        "cheer me up"
+      ],
+      "responses": [
+        "Why did the scarecrow get promoted? Because he was outstanding in his field 🌾",
+        "I told my plants about my problems. Now they're in therapy too — they have a lot of *root* issues 🌱",
+        "Why don't scientists trust atoms? Because they make up everything!"
+      ]
+    },
+    {
+      "tag": "not_helpful",
+      "patterns": [
+        "you don't understand",
+        "that's not helpful",
+        "you are not helping",
+        "you are useless",
+        "you are just a bot",
+        "that didn't help"
+      ],
+      "responses": [
+        "I'm sorry — I'm still learning and I don't always get it right. Could you tell me a bit more, in your own words? I really want to understand.",
+        "Fair point, and thank you for telling me. I'm a bot with limits. If you'd like to talk to a real person, I can help you find a therapist."
+      ],
+      "actions": [
+        "therapists"
+      ]
+    },
+    {
+      "tag": "affirm",
+      "patterns": [
+        "yes",
+        "yeah",
+        "yes please",
+        "sure",
+        "okay",
+        "ok",
+        "let's do it",
+        "why not",
+        "yep",
+        "alright"
+      ],
+      "responses": [
+        "Okay! Tell me more — I'm listening."
+      ]
+    },
+    {
+      "tag": "deny",
+      "patterns": [
+        "no",
+        "nope",
+        "not now",
+        "no thanks",
+        "maybe later",
+        "nah"
+      ],
+      "responses": [
+        "That's completely fine. We can just talk — what's on your mind?",
+        "No problem. I'm here whenever you want."
+      ]
+    }
+  ]
+}

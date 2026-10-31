@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fd1b9'/%3E%3Cstop offset='.5' stop-color='%237aa7e0'/%3E%3Cstop offset='1' stop-color='%23b39ddb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
+<title>Therapist dashboard — Aurora</title>
+</head>
+<body>
+<header id="nav" class="nav"></header>
+
+<main class="container">
+  <h1 id="hello">Dashboard</h1>
+  <p class="muted" id="practice"></p>
+
+  <div class="card soft" style="margin-top:8px">
+    <strong>🔒 Privacy by design.</strong> You can only open the records of people who have booked an in-person session with you and agreed to share their data. If they cancel, access ends.
+  </div>
+
+  <section class="section">
+    <div class="section-head"><h2>Session requests & bookings</h2></div>
+    <div class="card" style="padding:8px 16px"><div class="table-wrap"><table class="list" id="appts"></table></div></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>My patients</h2></div>
+    <div class="grid grid-3" id="patients"></div>
+  </section>
+</main>
+
+<script src="/js/common.js"></script>
+<script>
+  const STATUS = { requested: 'warn', confirmed: 'ok', completed: '', declined: 'bad', cancelled: 'bad' };
+
+  (async () => {
+    const me = await boot('therapist');
+    $('#hello').textContent = `${greeting()}, ${me.user.name}`;
+    $('#practice').textContent = `${me.therapist.specialization} · ${me.therapist.clinic_address}`;
+
+    async function load() {
+      const [appts, patients] = await Promise.all([api('/therapist/appointments'), api('/therapist/patients')]);
+      $('#appts').innerHTML = appts.length ? `
+        <thead><tr><th>Patient</th><th>When</th><th>Reason</th><th>Status</th><th></th></tr></thead>
+        <tbody>${appts.map(a => `
+          <tr>
+            <td><strong>${esc(a.patient)}</strong><div class="small muted">${esc([a.age_group, a.occupation].filter(Boolean).join(' · '))}</div></td>
+            <td>${fmtDateTime(a.scheduled_at)}</td>
+            <td class="small">${esc(a.reason || '—')}</td>
+            <td><span class="pill ${STATUS[a.status]}">${a.status}</span></td>
+            <td><div class="row" style="justify-content:flex-end">
+              ${a.status === 'requested' ? `<button class="btn small" data-id="${a.id}" data-status="confirmed">Confirm</button>
+                 <button class="btn ghost small" data-id="${a.id}" data-status="declined">Decline</button>` : ''}
+              ${a.status === 'confirmed' ? `<button class="btn secondary small" data-id="${a.id}" data-status="completed">Mark completed</button>` : ''}
+              ${['requested', 'confirmed', 'completed'].includes(a.status) ? `<a class="btn ghost small" href="/therapist/patient.html?id=${a.user_id}">Open record</a>` : ''}
+            </div></td>
+          </tr>`).join('')}</tbody>` : '<tbody><tr><td class="empty">No bookings yet. People using Aurora can find you on the Therapists page.</td></tr></tbody>';
+
+      $('#patients').innerHTML = patients.length ? patients.map(p => `
+        <a class="card" href="/therapist/patient.html?id=${p.id}">
+          <div class="row"><span class="avatar">${esc(p.name[0])}</span><div><strong>${esc(p.name)}</strong>
+            <div class="small muted">${esc([p.age_group, p.occupation].filter(Boolean).join(' · '))}</div></div></div>
+          <p class="small" style="margin:12px 0 0">Latest mood: ${p.latest_mood ? `${moodInfo(p.latest_mood).emoji} ${moodInfo(p.latest_mood).label}` : '—'}</p>
+          <p class="small muted" style="margin:0">Session: ${fmtDateTime(p.last_session)}</p>
+        </a>`).join('') : '<div class="empty">No patients yet.</div>';
+    }
+
+    $('#appts').addEventListener('click', async e => {
+      const { id, status } = e.target.dataset;
+      if (!id) return;
+      try {
+        await api(`/therapist/appointments/${id}/status`, { method: 'POST', body: { status } });
+        toast(`Session ${status}`);
+        load();
+      } catch (err) { toast(err.message); }
+    });
+    load();
+  })();
+</script>
+</body>
+</html>

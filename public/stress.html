@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fd1b9'/%3E%3Cstop offset='.5' stop-color='%237aa7e0'/%3E%3Cstop offset='1' stop-color='%23b39ddb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
+<title>Stress buster zone — Aurora</title>
+</head>
+<body>
+<header id="nav" class="nav"></header>
+
+<main class="container">
+  <h1>Stress buster zone</h1>
+  <p class="muted">Pick whatever fits right now — let it out, slow it down, or just keep your hands busy.</p>
+
+  <nav class="tool-picker" id="picker" aria-label="Tools">
+    <a href="#punch"><span>🥊</span>Punching bag<small>Let it out</small></a>
+    <a href="#breathe"><span>🌬️</span>Breathe<small>Slow it down</small></a>
+    <a href="#meditate"><span>🪷</span>Meditate<small>Sit with calm</small></a>
+    <a href="#bubbles"><span>🫧</span>Bubble wrap<small>Pop pop pop</small></a>
+    <a href="#letgo"><span>🎈</span>Let it go<small>Release a worry</small></a>
+    <a href="#ground"><span>🌳</span>5-4-3-2-1<small>Ground yourself</small></a>
+    <a href="#doodle"><span>🎨</span>Doodle<small>Mindful drawing</small></a>
+  </nav>
+
+  <!-- Punching bag -->
+  <section class="tool" id="tool-punch" hidden>
+    <div class="spread"><h2>🥊 Punching bag</h2>
+      <div class="row"><input type="text" id="bag-label" maxlength="24" placeholder="Write what's bugging you on the bag" style="width:min(320px,100%)"></div>
+    </div>
+    <div class="stage bag-stage" id="bag-stage" tabindex="0" role="button" aria-label="Punching bag — click, tap or press space to punch">
+      <div class="hud">
+        <div><div class="big" id="punches">0</div><div class="small muted">punches</div></div>
+        <div style="text-align:right"><div class="small muted">power</div><div class="power"><span id="power"></span></div></div>
+      </div>
+      <svg viewBox="0 0 200 420" aria-hidden="true">
+        <line x1="100" y1="0" x2="100" y2="40" stroke="#9aa3ae" stroke-width="4"/>
+        <g id="bag">
+          <line x1="100" y1="40" x2="70" y2="80" stroke="#9aa3ae" stroke-width="3"/>
+          <line x1="100" y1="40" x2="130" y2="80" stroke="#9aa3ae" stroke-width="3"/>
+          <g id="bag-body">
+            <rect x="52" y="76" width="96" height="290" rx="34" fill="var(--accent)"/>
+            <rect x="52" y="76" width="96" height="290" rx="34" fill="url(#shine)"/>
+            <rect x="52" y="120" width="96" height="10" fill="rgba(0,0,0,.12)"/>
+            <rect x="52" y="312" width="96" height="10" fill="rgba(0,0,0,.12)"/>
+            <text id="bag-text" x="100" y="225" text-anchor="middle" fill="#fff" font-family="Nunito, sans-serif" font-weight="800" font-size="15"></text>
+          </g>
+        </g>
+        <defs>
+          <linearGradient id="shine" x1="0" x2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="1" stop-color="#000" stop-opacity=".18"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="bag-msg" id="bag-msg">Click or tap the bag. Faster punches = more power.</div>
+    </div>
+    <div class="row" style="margin-top:14px"><button class="btn secondary" id="bag-done">I feel a bit better</button><label class="check small"><input type="checkbox" id="bag-sound" checked> Sound</label></div>
+  </section>
+
+  <!-- Breathing -->
+  <section class="tool" id="tool-breathe" hidden>
+    <div class="spread"><h2>🌬️ Breathe with me</h2><div id="patterns"></div></div>
+    <div class="stage breathe-stage">
+      <div class="orb-wrap">
+        <div class="orb-ring"></div>
+        <div class="orb" id="orb"></div>
+        <div class="orb-label" id="orb-label">Ready?<span class="orb-count" id="orb-count"></span></div>
+      </div>
+      <p class="muted center" id="pattern-desc" style="max-width:46ch"></p>
+      <div class="row"><button class="btn" id="breathe-toggle">Start</button><span class="muted small" id="rounds"></span></div>
+    </div>
+  </section>
+
+  <!-- Meditation -->
+  <section class="tool" id="tool-meditate" hidden>
+    <h2>🪷 Meditate</h2>
+    <div class="stage med-stage">
+      <div class="ripple" id="ripple"></div>
+      <div class="timer" id="timer">05:00</div>
+      <p class="muted" id="med-prompt" style="min-height:3em;max-width:40ch;margin:0">Find a comfortable position. Soften your gaze or close your eyes.</p>
+      <div><div class="small muted" style="margin-bottom:6px">Length</div><div id="durations"></div></div>
+      <div><div class="small muted" style="margin-bottom:6px">Background sound</div><div id="sounds"></div></div>
+      <button class="btn" id="med-toggle">Begin</button>
+    </div>
+  </section>
+
+  <!-- Bubble wrap -->
+  <section class="tool" id="tool-bubbles" hidden>
+    <div class="spread"><h2>🫧 Bubble wrap</h2><div class="row"><span class="muted" id="pop-count">0 popped</span><button class="btn secondary small" id="new-sheet">New sheet</button></div></div>
+    <div class="stage"><div class="bubbles" id="bubbles"></div></div>
+  </section>
+
+  <!-- Let it go -->
+  <section class="tool" id="tool-letgo" hidden>
+    <h2>🎈 Write it down & let it go</h2>
+    <div class="stage letgo-stage">
+      <p class="muted" style="margin:0">Type the thought that keeps bothering you. When you're ready, release it. <strong>Nothing you write here is saved.</strong></p>
+      <textarea id="worry" placeholder="I keep worrying that…"></textarea>
+      <div class="row"><button class="btn" id="release">Let it go 🎈</button></div>
+      <div id="worry-zone" style="min-height:140px;position:relative"></div>
+      <p class="center muted hidden" id="released-msg" style="font-family:var(--font-display);font-size:1.3rem">It's gone. That thought doesn't get to stay. 🌿</p>
+    </div>
+  </section>
+
+  <!-- Grounding -->
+  <section class="tool" id="tool-ground" hidden>
+    <h2>🌳 5-4-3-2-1 grounding</h2>
+    <div class="stage" style="padding:28px">
+      <div class="progress"><span id="ground-bar"></span></div>
+      <div id="ground-step" class="ground-step"></div>
+      <div class="wizard-nav"><button class="btn ghost" id="ground-back">Back</button><button class="btn" id="ground-next">Next</button></div>
+    </div>
+  </section>
+
+  <!-- Doodle -->
+  <section class="tool" id="tool-doodle" hidden>
+    <h2>🎨 Mindful doodle</h2>
+    <div class="stage doodle-stage">
+      <div class="doodle-tools">
+        <div class="row" id="swatches" style="gap:6px"></div>
+        <label class="small" style="margin:0;display:flex;gap:8px;align-items:center">Size <input type="range" id="brush" min="2" max="30" value="6"></label>
+        <div id="mirror"></div>
+        <span style="flex:1"></span>
+        <button class="btn ghost small" id="doodle-clear">Clear</button>
+        <button class="btn secondary small" id="doodle-save">Save image</button>
+      </div>
+      <canvas id="doodle-canvas"></canvas>
+    </div>
+  </section>
+</main>
+
+<script src="/js/common.js"></script>
+<script src="/js/stress.js"></script>
+</body>
+</html>

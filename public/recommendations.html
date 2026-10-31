@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fd1b9'/%3E%3Cstop offset='.5' stop-color='%237aa7e0'/%3E%3Cstop offset='1' stop-color='%23b39ddb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
+<title>Picked for you — Aurora</title>
+</head>
+<body>
+<header id="nav" class="nav"></header>
+
+<main class="container">
+  <div class="card soft hidden" id="welcome" style="margin-bottom:24px">
+    <h2 style="margin:0 0 6px">Welcome to Aurora, <span id="wname"></span> 🌿</h2>
+    <p style="margin:0">We looked at the films, books, music and daily routine you told us about. Here's what we think you'll enjoy — plus a few things to try that are a little outside your usual.</p>
+  </div>
+
+  <div class="spread">
+    <div>
+      <h1 style="margin-bottom:.2em">Picked for you</h1>
+      <p class="muted" id="mood-copy" style="margin:0"></p>
+    </div>
+    <button class="btn secondary" id="shuffle">↻ Show me different ones</button>
+  </div>
+
+  <div class="card plain" style="margin-top:20px">
+    <div class="small muted" style="margin-bottom:8px;font-weight:700">Picking for how you feel:</div>
+    <div id="mood-switch"></div>
+  </div>
+
+  <section class="section" style="margin-top:28px">
+    <h2>What we noticed</h2>
+    <div class="grid grid-2" id="insights"></div>
+  </section>
+
+  <nav class="tabs section" aria-label="Jump to">
+    <a href="#movies">🎬 Movies</a><a href="#books">📚 Books</a><a href="#music">🎧 Music</a><a href="#activities">🌱 Things to try</a>
+  </nav>
+
+  <section id="movies" class="section" style="margin-top:16px">
+    <div class="section-head"><h2>🎬 Movies for you</h2><span class="small muted">From the MovieLens dataset</span></div>
+    <div class="grid grid-4" id="movies-for"></div>
+    <h3 style="margin-top:28px">Try something new</h3>
+    <div class="grid grid-4" id="movies-new"></div>
+  </section>
+
+  <section id="books" class="section">
+    <div class="section-head"><h2>📚 Books for you</h2><span class="small muted">From the goodbooks-10k dataset</span></div>
+    <div class="grid grid-2" id="books-for"></div>
+    <h3 style="margin-top:28px">Try something new</h3>
+    <div class="grid grid-2" id="books-new"></div>
+  </section>
+
+  <section id="music" class="section">
+    <div class="section-head"><h2>🎧 Your mood mix</h2><span class="small muted">From the Spotify Tracks dataset · opens in Spotify</span></div>
+    <p class="muted" id="music-label"></p>
+    <div class="card" style="padding:12px"><div class="grid grid-2" style="gap:4px" id="music-for"></div></div>
+    <h3 style="margin-top:28px">Genres you might like: <span id="new-fams" class="muted"></span></h3>
+    <div class="card" style="padding:12px"><div class="grid grid-2" style="gap:4px" id="music-new"></div></div>
+  </section>
+
+  <section id="activities" class="section">
+    <div class="section-head"><h2>🌱 Things to try this week</h2><span class="small muted">Based on your daily routine</span></div>
+    <div class="grid grid-3" id="acts"></div>
+  </section>
+</main>
+
+<script src="/js/common.js"></script>
+<script src="/js/recommendations.js"></script>
+</body>
+</html>

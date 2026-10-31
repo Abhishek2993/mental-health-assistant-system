@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fd1b9'/%3E%3Cstop offset='.5' stop-color='%237aa7e0'/%3E%3Cstop offset='1' stop-color='%23b39ddb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
+<title>Talk to Aurora</title>
+</head>
+<body>
+<header id="nav" class="nav"></header>
+
+<main class="container" style="padding:24px 0">
+  <div class="card chat-shell">
+    <div class="chat-head">
+      <span class="brand-mark" aria-hidden="true" style="width:40px;height:40px"></span>
+      <div style="flex:1">
+        <strong>Aurora</strong>
+        <div class="small muted">A non-judgmental space · not a substitute for professional help</div>
+      </div>
+      <button class="btn ghost small" id="clear" title="Delete this conversation">Clear chat</button>
+    </div>
+
+    <div class="chat-log" id="log" aria-live="polite"></div>
+
+    <div>
+      <div class="quick" id="quick"></div>
+      <form class="chat-input" id="form">
+        <label class="sr-only" for="msg">Message</label>
+        <textarea id="msg" rows="1" placeholder="Type how you're feeling…" autocomplete="off"></textarea>
+        <button class="btn" type="submit" id="send">Send</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<script src="/js/common.js"></script>
+<script>
+  const QUICK = ["I'm feeling stressed", "I can't sleep", 'I feel lonely', 'I just want to vent', 'What is anxiety?', 'Tell me a joke'];
+
+  (async () => {
+    const me = await boot('user');
+    const first = me.user.name.split(' ')[0];
+    const log = $('#log');
+
+    function add(sender, text, extra = {}) {
+      const div = document.createElement('div');
+      div.className = `msg ${sender}`;
+      div.textContent = text;
+      if (extra.actions?.length) {
+        const a = document.createElement('div');
+        a.className = 'msg-actions';
+        a.innerHTML = extra.actions.map(x => `<a href="${esc(x.href)}">${esc(x.label)} →</a>`).join('');
+        div.append(a);
+      }
+      log.append(div);
+      if (extra.crisis) {
+        const c = document.createElement('div');
+        c.className = 'crisis-card';
+        c.innerHTML = `<h4>You don't have to go through this alone 💛</h4><div class="helplines">${helplinesHTML()}</div>`;
+        log.append(c);
+      }
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function typing(on) {
+      $('#typing')?.remove();
+      if (!on) return;
+      const t = document.createElement('div');
+      t.className = 'msg bot';
+      t.id = 'typing';
+      t.innerHTML = '<span class="typing" aria-label="Aurora is typing"><i></i><i></i><i></i></span>';
+      log.append(t);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    const history = await api('/chat');
+    if (history.length) history.forEach(m => add(m.sender, m.text));
+    else add('bot', `Hi ${first} 🌿 I'm Aurora. This is a safe, judgment-free space. How are you feeling today?`);
+
+    $('#quick').innerHTML = QUICK.map(q => `<button type="button" class="chip">${esc(q)}</button>`).join('');
+    $('#quick').addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if (chip) send(chip.textContent);
+    });
+
+    async function send(text) {
+      text = text.trim();
+      if (!text) return;
+      add('user', text);
+      $('#msg').value = '';
+      $('#msg').style.height = '';
+      $('#send').disabled = true;
+      typing(true);
+      try {
+        const [reply] = await Promise.all([
+          api('/chat', { method: 'POST', body: { message: text } }),
+          new Promise(r => setTimeout(r, 600 + Math.random() * 600)), // a natural pause
+        ]);
+        typing(false);
+        add('bot', reply.reply, reply);
+        if (reply.mood) applyMood(reply.mood);
+      } catch (err) {
+        typing(false);
+        add('bot', `Sorry, I couldn't reach the server (${err.message}). Please try again.`);
+      }
+      $('#send').disabled = false;
+      $('#msg').focus();
+    }
+
+    $('#form').addEventListener('submit', e => { e.preventDefault(); send($('#msg').value); });
+    $('#msg').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send($('#msg').value); }
+    });
+    $('#msg').addEventListener('input', e => {
+      e.target.style.height = '';
+      e.target.style.height = `${Math.min(e.target.scrollHeight, 160)}px`;
+    });
+    $('#clear').addEventListener('click', async () => {
+      if (!confirm('Delete this whole conversation? This can\'t be undone.')) return;
+      await api('/chat', { method: 'DELETE' });
+      log.innerHTML = '';
+      add('bot', `Fresh start, ${first}. What's on your mind?`);
+    });
+    $('#msg').focus();
+  })();
+</script>
+</body>
+</html>

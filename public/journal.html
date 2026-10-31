@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fd1b9'/%3E%3Cstop offset='.5' stop-color='%237aa7e0'/%3E%3Cstop offset='1' stop-color='%23b39ddb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
+<title>Journal — Aurora</title>
+</head>
+<body>
+<header id="nav" class="nav"></header>
+
+<main class="container">
+  <h1>Daily journal</h1>
+  <p class="muted">Get it out of your head and onto the page. Entries are private unless you choose to share one with your therapist.</p>
+
+  <div class="grid grid-2">
+    <form class="card" id="form">
+      <h3 id="today"></h3>
+      <div class="field"><label>How are you feeling?</label><div id="mood"></div></div>
+      <div class="field"><label for="title">Title <span class="muted">(optional)</span></label><input id="title" type="text" maxlength="120"></div>
+      <div class="field"><label for="body">What's on your mind?</label><textarea id="body" rows="7" placeholder="" required></textarea></div>
+      <label class="check field"><input type="checkbox" id="shared"> Share this entry with my therapist</label>
+      <p class="error hidden" id="error" role="alert"></p>
+      <button class="btn" type="submit">Save entry</button>
+    </form>
+
+    <div class="stack">
+      <div class="card"><h3>Mood history · 30 days</h3><div id="chart"></div></div>
+      <div class="card soft"><h3>Need a prompt?</h3><p id="prompt" style="margin:0 0 12px"></p><button class="btn small secondary" id="another" type="button">Another prompt</button></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2>Recent entries</h2>
+    <div class="stack" id="entries"></div>
+  </section>
+</main>
+
+<script src="/js/common.js"></script>
+<script>
+  const PROMPTS = [
+    'What’s one thing that went okay today, however small?',
+    'What’s taking up the most space in your head right now?',
+    'If your best friend felt the way you do, what would you tell them?',
+    'What drained your energy today? What gave you some back?',
+    'Name three things you’re grateful for — they can be tiny.',
+    'What would make tomorrow 1% better?',
+    'What’s something you’re proud of that nobody noticed?',
+    'Describe how your body feels right now, from head to toe.',
+  ];
+  let promptIndex = new Date().getDate() % PROMPTS.length;
+
+  (async () => {
+    await boot('user');
+    let mood = document.documentElement.dataset.mood || 'okay';
+    $('#today').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+    moodPicker($('#mood'), { selected: mood, onPick: m => { mood = m; } });
+
+    const showPrompt = () => { $('#prompt').textContent = PROMPTS[promptIndex]; $('#body').placeholder = PROMPTS[promptIndex]; };
+    $('#another').addEventListener('click', () => { promptIndex = (promptIndex + 1) % PROMPTS.length; showPrompt(); });
+    showPrompt();
+
+    async function load() {
+      const [entries, moods] = await Promise.all([api('/journal'), api('/moods?days=30')]);
+      moodChart($('#chart'), moods, { days: 30 });
+      $('#entries').innerHTML = entries.length ? entries.map(e => `
+        <article class="card plain entry" style="--c: var(--m-${e.mood || 'okay'})">
+          <div class="spread">
+            <div><strong>${esc(e.title || fmtDate(e.created_at, { weekday: 'long', day: 'numeric', month: 'short' }))}</strong>
+              <span class="small muted"> · ${fmtDateTime(e.created_at)}</span></div>
+            <div class="row">
+              ${e.mood ? `<span class="pill">${moodInfo(e.mood).emoji} ${moodInfo(e.mood).label}</span>` : ''}
+              <label class="check small" style="margin:0"><input type="checkbox" data-share="${e.id}" ${e.shared ? 'checked' : ''}> Shared with therapist</label>
+              <button class="btn ghost small" data-del="${e.id}">Delete</button>
+            </div>
+          </div>
+          <p class="entry-body" style="margin:10px 0 0">${esc(e.body)}</p>
+        </article>`).join('') : '<div class="empty">No entries yet. Your first one can be just a sentence.</div>';
+    }
+
+    $('#entries').addEventListener('change', async e => {
+      const id = e.target.dataset.share;
+      if (!id) return;
+      await api(`/journal/${id}`, { method: 'PATCH', body: { shared: e.target.checked } });
+      toast(e.target.checked ? 'Shared with your therapist' : 'Entry is private again');
+    });
+    $('#entries').addEventListener('click', async e => {
+      const id = e.target.dataset.del;
+      if (!id || !confirm('Delete this entry permanently?')) return;
+      await api(`/journal/${id}`, { method: 'DELETE' });
+      load();
+    });
+
+    $('#form').addEventListener('submit', async e => {
+      e.preventDefault();
+      try {
+        await api('/journal', { method: 'POST', body: { title: $('#title').value, body: $('#body').value, mood, shared: $('#shared').checked } });
+        await api('/moods', { method: 'POST', body: { mood } });
+        applyMood(mood);
+        $('#form').reset();
+        $('#error').classList.add('hidden');
+        toast('Saved. Thank you for showing up for yourself 🌿');
+        load();
+      } catch (err) {
+        $('#error').textContent = err.message;
+        $('#error').classList.remove('hidden');
+      }
+    });
+    load();
+  })();
+</script>
+</body>
+</html>

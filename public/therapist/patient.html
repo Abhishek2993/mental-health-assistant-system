@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fd1b9'/%3E%3Cstop offset='.5' stop-color='%237aa7e0'/%3E%3Cstop offset='1' stop-color='%23b39ddb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,100&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script>try { document.documentElement.dataset.mood = localStorage.getItem('aurora-mood') || 'okay'; } catch (e) {}</script>
+<title>Patient record — Aurora</title>
+</head>
+<body>
+<header id="nav" class="nav"></header>
+
+<main class="container">
+  <p><a href="/therapist/dashboard.html">← Back to dashboard</a></p>
+  <div id="denied" class="card hidden"><h2>Access not available</h2><p class="muted" id="denied-msg" style="margin:0"></p></div>
+
+  <div id="record" class="hidden">
+    <div class="spread">
+      <div><h1 id="name" style="margin-bottom:.1em"></h1><p class="muted" id="meta" style="margin:0"></p></div>
+      <div id="crisis"></div>
+    </div>
+
+    <div class="grid grid-2 section" style="margin-top:24px">
+      <div class="card"><h3>Mood · last 60 days</h3><div id="chart"></div><div id="mood-summary" class="small muted" style="margin-top:8px"></div></div>
+      <div class="card"><h3>Chat sentiment · last 30 days</h3><p class="small muted">Average tone of what they wrote to Aurora each day (−1 negative to +1 positive). Message content is never shared.</p><div id="sentiment"></div></div>
+    </div>
+
+    <div class="grid grid-2 section" style="margin-top:16px">
+      <div class="card">
+        <h3>About them (from sign-up)</h3>
+        <dl class="kv" id="profile"></dl>
+      </div>
+      <div class="card">
+        <h3>Sessions with you</h3>
+        <div class="stack" id="appts"></div>
+        <h3 style="margin-top:24px">Private notes</h3>
+        <form id="note-form" class="stack">
+          <textarea id="note" rows="3" style="min-height:90px" placeholder="Only you can see these notes."></textarea>
+          <button class="btn small" type="submit">Add note</button>
+        </form>
+        <div class="stack" id="notes" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <section class="section">
+      <h2>Journal entries they chose to share</h2>
+      <div class="stack" id="journal"></div>
+    </section>
+  </div>
+</main>
+
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    await boot('therapist');
+    const id = new URLSearchParams(location.search).get('id');
+
+    async function load() {
+      let d;
+      try {
+        d = await api(`/therapist/patients/${encodeURIComponent(id)}`);
+      } catch (err) {
+        $('#denied-msg').textContent = err.message;
+        $('#denied').classList.remove('hidden');
+        return;
+      }
+      $('#record').classList.remove('hidden');
+      const p = d.profile || {};
+      document.title = `${d.patient.name} — Aurora`;
+      $('#name').textContent = d.patient.name;
+      $('#meta').textContent = [p.age_group, p.occupation, `on Aurora since ${fmtDate(d.patient.created_at, { month: 'short', year: 'numeric' })}`].filter(Boolean).join(' · ');
+      $('#crisis').innerHTML = d.crisisFlags.length
+        ? `<span class="pill bad" title="Times the chatbot detected crisis language and showed helplines">⚠ Crisis language detected ${d.crisisFlags.length}× · last ${fmtDate(d.crisisFlags[0].created_at)}</span>` : '';
+
+      moodChart($('#chart'), d.moods, { days: 60 });
+      const counts = {};
+      d.moods.forEach(m => { counts[m.mood] = (counts[m.mood] || 0) + 1; });
+      $('#mood-summary').textContent = d.moods.length
+        ? `${d.moods.length} check-ins · ` + Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([m, n]) => `${moodInfo(m).label} ${n}`).join(', ')
+        : '';
+
+      $('#sentiment').innerHTML = d.chatSentiment.length ? d.chatSentiment.map(s => {
+        const pct = Math.round(Math.abs(s.avg) * 50);
+        const pos = s.avg >= 0;
+        return `<div class="row small" style="flex-wrap:nowrap;margin-bottom:6px">
+          <span style="width:64px" class="muted">${fmtDate(s.day + ' 12:00:00')}</span>
+          <span style="flex:1;display:flex;height:10px;background:var(--bg-2);border-radius:6px;position:relative">
+            <span style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--border)"></span>
+            <span style="position:absolute;${pos ? 'left' : 'right'}:50%;width:${pct}%;height:100%;border-radius:6px;background:var(--m-${pos ? 'stressed' : 'low'})"></span>
+          </span>
+          <span style="width:110px;text-align:right;white-space:nowrap">${s.avg > 0 ? '+' : ''}${s.avg} · ${s.messages} msg</span></div>`;
+      }).join('') : '<div class="empty">No chats in the last 30 days.</div>';
+
+      const list = v => (v && v.length ? v.join(', ') : '—');
+      $('#profile').innerHTML = [
+        ['Hoping for', p.hoping_for || '—'],
+        ['Sleep', p.sleep_hours ? `${p.sleep_hours} hours` : '—'],
+        ['Screen time', p.screen_time || '—'],
+        ['Typical day', list(p.daily_activities)],
+        ['Unwinds by', list(p.unwind)],
+        ['Recently watched', p.recent_movie || '—'],
+        ['Recently read', p.recent_book || '—'],
+        ['Music', list(p.music_families) + (p.favourite_artist ? ` · loves ${p.favourite_artist}` : '')],
+      ].map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
+
+      $('#appts').innerHTML = d.appointments.map(a => `<div class="spread small"><span>${fmtDateTime(a.scheduled_at)}${a.reason ? ` — ${esc(a.reason)}` : ''}</span><span class="pill">${a.status}</span></div>`).join('');
+      $('#notes').innerHTML = d.notes.map(n => `<div class="card plain" style="padding:14px"><div class="small muted">${fmtDateTime(n.created_at)}</div><div style="white-space:pre-wrap">${esc(n.body)}</div></div>`).join('');
+      $('#journal').innerHTML = d.journal.length ? d.journal.map(e => `
+        <article class="card plain entry" style="--c: var(--m-${e.mood || 'okay'})">
+          <div class="spread"><strong>${esc(e.title || 'Untitled')}</strong><span class="small muted">${e.mood ? moodInfo(e.mood).emoji + ' ' : ''}${fmtDateTime(e.created_at)}</span></div>
+          <p class="entry-body" style="margin:8px 0 0">${esc(e.body)}</p>
+        </article>`).join('') : '<div class="empty">They haven\'t shared any journal entries.</div>';
+    }
+
+    $('#note-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!$('#note').value.trim()) return;
+      await api(`/therapist/patients/${encodeURIComponent(id)}/notes`, { method: 'POST', body: { body: $('#note').value } });
+      $('#note').value = '';
+      load();
+    });
+    load();
+  })();
+</script>
+</body>
+</html>
